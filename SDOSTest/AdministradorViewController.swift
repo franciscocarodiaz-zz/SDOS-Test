@@ -57,7 +57,7 @@ class AdministradorViewController: UIViewController,UITextFieldDelegate{
         // 2. Load new screen
         let storyboard = UIStoryboard(name: "Welcome", bundle: nil)
         let vc = storyboard.instantiateViewControllerWithIdentifier("HomeVC") as! HomeVC
-        vc.managedObjectContext = self.managedObjectContext
+        
         let navigationController = UINavigationController(rootViewController: vc)
         
         // 3. Navigate to new screen

@@ -72,7 +72,6 @@ class TecnicoViewController: UITableViewController, NSFetchedResultsControllerDe
         
         let storyboard = UIStoryboard(name: "Welcome", bundle: nil)
         let vc = storyboard.instantiateViewControllerWithIdentifier("HomeVC") as! HomeVC
-        vc.managedObjectContext = self.managedObjectContext
         
         let navigationController = UINavigationController(rootViewController: vc)
         

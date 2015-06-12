@@ -14,7 +14,6 @@ class HomeVC: UIViewController, NSFetchedResultsControllerDelegate {
 
     @IBOutlet weak var welcomeTitle: UILabel!
     @IBOutlet var usernameLabel : UILabel!
-    var managedObjectContext: NSManagedObjectContext? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -88,7 +87,7 @@ class HomeVC: UIViewController, NSFetchedResultsControllerDelegate {
                         }
                     }
                     
-                    let user = Usuario(name: name!, password: password!, phone: phone!, code: code!, usertype: usertype!, skill: skills, insertIntoManagedObjectContext: self.managedObjectContext)
+                    let user = Usuario(name: name!, password: password!, phone: phone!, code: code!, usertype: usertype!, skill: skills, insertIntoManagedObjectContext: SDOSCoreDataStack.sharedManager.managedObjectContext)
                     
                 }
                 var prefs:NSUserDefaults = NSUserDefaults.standardUserDefaults()

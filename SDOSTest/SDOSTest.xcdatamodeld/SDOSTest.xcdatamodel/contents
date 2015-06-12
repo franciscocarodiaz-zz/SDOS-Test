@@ -6,17 +6,25 @@
         </attribute>
         <userInfo/>
     </entity>
+    <entity name="Task" syncable="YES">
+        <attribute name="descripcion" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="duration" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="typetask" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="usuarios" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Usuario" inverseName="task" inverseEntity="Usuario" syncable="YES"/>
+    </entity>
     <entity name="Usuario" syncable="YES">
-        <attribute name="code" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="code" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="datetask" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="password" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="phone" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="skills" optional="YES" attributeType="Transformable" syncable="YES"/>
-        <attribute name="usertype" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="usertype" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="task" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Task" inverseName="usuarios" inverseEntity="Task" syncable="YES"/>
     </entity>
     <elements>
         <element name="Event" positionX="261" positionY="189" width="128" height="60"/>
-        <element name="Usuario" positionX="27" positionY="-18" width="128" height="150"/>
+        <element name="Usuario" positionX="27" positionY="-18" width="128" height="165"/>
+        <element name="Task" positionX="144" positionY="90" width="128" height="105"/>
     </elements>
 </model>

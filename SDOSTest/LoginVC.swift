@@ -63,11 +63,8 @@ class LoginVC: UIViewController,UITextFieldDelegate {
     }
     */
     func fetchLog(name : NSString) {
-        //1
-        let appDelegate =
-        UIApplication.sharedApplication().delegate as! AppDelegate
         
-        let managedContext = appDelegate.managedObjectContext!
+        let managedContext = SDOSCoreDataStack.sharedManager.managedObjectContext!
         
         //2
         let fetchRequest = NSFetchRequest(entityName:"Usuario")

@@ -41,6 +41,8 @@
 		3E9C69331B2906A20083BB9B /* Usuario.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9C69321B2906A20083BB9B /* Usuario.swift */; };
 		3E9C693C1B29EC400083BB9B /* Administrador.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3E9C693B1B29EC400083BB9B /* Administrador.storyboard */; };
 		3EDB15D21B29EDB500D1605B /* AdministradorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDB15D11B29EDB500D1605B /* AdministradorViewController.swift */; };
+		3EDB15D41B2AC48100D1605B /* SDOSCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDB15D31B2AC48100D1605B /* SDOSCoreDataStack.swift */; };
+		3EDB15D61B2AC99000D1605B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDB15D51B2AC99000D1605B /* Constants.swift */; };
 		B7DEBCC2CC7C9A88057346E5 /* Pods_SDOSTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0004B0924D09813AF818C5AB /* Pods_SDOSTest.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
 
@@ -97,6 +99,8 @@
 		3E9C69371B29CB190083BB9B /* HelveticaNeueLTStd-Lt.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "HelveticaNeueLTStd-Lt.otf"; path = "../../../../../Desktop/InvierteMe/Klifikv1/iOS/trunk 2/trunk/Klifik/Resources/Fonts/HelveticaNeueLTStd-Lt.otf"; sourceTree = "<group>"; };
 		3E9C693B1B29EC400083BB9B /* Administrador.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Administrador.storyboard; sourceTree = "<group>"; };
 		3EDB15D11B29EDB500D1605B /* AdministradorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdministradorViewController.swift; sourceTree = "<group>"; };
+		3EDB15D31B2AC48100D1605B /* SDOSCoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDOSCoreDataStack.swift; sourceTree = "<group>"; };
+		3EDB15D51B2AC99000D1605B /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		43E38D898C4DFAACE1BE90D1 /* Pods-SDOSTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SDOSTest.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SDOSTest/Pods-SDOSTest.debug.xcconfig"; sourceTree = "<group>"; };
 		CB46EE277E3791A0B02FA45E /* Pods-SDOSTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SDOSTest.release.xcconfig"; path = "Pods/Target Support Files/Pods-SDOSTest/Pods-SDOSTest.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -148,7 +152,6 @@
 				3E91F2C31B28AE0F008CAE52 /* Model */,
 				3E91F28A1B287A24008CAE52 /* View */,
 				3E91F2891B287A1A008CAE52 /* Controller */,
-				3E91F2661B287925008CAE52 /* SDOSTest.xcdatamodeld */,
 				3E9C69341B29CB090083BB9B /* Resources */,
 				3E91F2621B287925008CAE52 /* Supporting Files */,
 			);
@@ -159,6 +162,7 @@
 			isa = PBXGroup;
 			children = (
 				3E91F2631B287925008CAE52 /* Info.plist */,
+				3EDB15D51B2AC99000D1605B /* Constants.swift */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -228,6 +232,7 @@
 			children = (
 				3E91F29F1B289C84008CAE52 /* GearLoading.swift */,
 				3E91F2971B2895AC008CAE52 /* DataManager.swift */,
+				3EDB15D31B2AC48100D1605B /* SDOSCoreDataStack.swift */,
 			);
 			name = Provider;
 			sourceTree = "<group>";
@@ -259,6 +264,7 @@
 			isa = PBXGroup;
 			children = (
 				3E9C69321B2906A20083BB9B /* Usuario.swift */,
+				3E91F2661B287925008CAE52 /* SDOSTest.xcdatamodeld */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -472,8 +478,10 @@
 				3E91F2981B2895AC008CAE52 /* DataManager.swift in Sources */,
 				3E91F2921B287A95008CAE52 /* SignupVC.swift in Sources */,
 				3E91F2A01B289C84008CAE52 /* GearLoading.swift in Sources */,
+				3EDB15D41B2AC48100D1605B /* SDOSCoreDataStack.swift in Sources */,
 				3E91F2901B287A95008CAE52 /* HomeVC.swift in Sources */,
 				3E91F2911B287A95008CAE52 /* LoginVC.swift in Sources */,
+				3EDB15D61B2AC99000D1605B /* Constants.swift in Sources */,
 				3E91F2651B287925008CAE52 /* AppDelegate.swift in Sources */,
 				3EDB15D21B29EDB500D1605B /* AdministradorViewController.swift in Sources */,
 				3E91F26A1B287925008CAE52 /* TecnicoViewController.swift in Sources */,
