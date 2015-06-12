@@ -45,7 +45,13 @@
                         </connections>
                     </tableView>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" title="Técnico" id="cfd-WR-rkj"/>
+                    <navigationItem key="navigationItem" title="Técnico" id="cfd-WR-rkj">
+                        <barButtonItem key="rightBarButtonItem" title="Item" id="plO-EF-Mmc">
+                            <connections>
+                                <action selector="removeTask:" destination="QFw-05-puZ" id="GEk-L2-F9u"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oFc-dS-wDj" sceneMemberID="firstResponder"/>
             </objects>

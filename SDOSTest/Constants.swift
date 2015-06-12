@@ -21,4 +21,8 @@ let VC_HOME = "HomeVC"
 let TITLE_FONT = "STHeitiTC-Medium"
 
 
+// Utils
+let URL_USERS_SDOS = "http://s457595517.mialojamiento.es/ios/sdos/usersdata.json"
+let URL_TASKS_SDOS = "http://s457595517.mialojamiento.es/ios/sdos/tasks.json"
+
 var USER_DATA : Usuario!

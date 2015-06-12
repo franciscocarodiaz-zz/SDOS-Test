@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-class Usuario: NSManagedObject {
+class UsuarioAux: NSManagedObject {
 
     @NSManaged var code: String
     @NSManaged var name: String
@@ -18,19 +18,6 @@ class Usuario: NSManagedObject {
     @NSManaged var phone: String
     @NSManaged var skills: AnyObject
     @NSManaged var usertype: String
-    
-    class func createInManagedObjectContext(name: String, password: String, phone: String, code : String, usertype: String, skill: Array<Int>, insertIntoManagedObjectContext moc: NSManagedObjectContext) -> Usuario {
-        let newUser = NSEntityDescription.insertNewObjectForEntityForName("Usuario", inManagedObjectContext: moc) as! Usuario
-        newUser.name = name
-        newUser.password = password
-        newUser.phone = phone
-        newUser.code = code
-        newUser.usertype = usertype
-        newUser.skills = skill
-        newUser.datetask = NSDate()
-        
-        return newUser
-    }
     
     convenience init(name: String, password: String, phone: String, code : String, usertype: String, skill: Array<Int>, insertIntoManagedObjectContext context: NSManagedObjectContext!) {
         let entity = NSEntityDescription.entityForName("Usuario", inManagedObjectContext: context)!

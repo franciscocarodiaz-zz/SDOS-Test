@@ -16,7 +16,7 @@ class AdministradorViewController: UIViewController,UITextFieldDelegate{
     var prefs:NSUserDefaults = NSUserDefaults.standardUserDefaults()
     var nameUser : String! = nil
     
-    var taskList = ["0","1","2","3","4","5","6"]
+    var taskList = [TypeTask]()
     
     @IBOutlet weak var descriptionTask: UITextView!
     
@@ -24,7 +24,7 @@ class AdministradorViewController: UIViewController,UITextFieldDelegate{
     @IBOutlet weak var numberOfHoursOfTask: UILabel!
     
     @IBOutlet weak var typeTask: UIPickerView!
-    var typeTaskSelected :NSString! = ""
+    var typeTaskSelected :TypeTask! = nil
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -42,6 +42,16 @@ class AdministradorViewController: UIViewController,UITextFieldDelegate{
         
         let logOutButton = UIBarButtonItem(barButtonSystemItem: .Reply, target: self, action: "logOut:")
         self.navigationItem.leftBarButtonItem = logOutButton
+        
+        DataManager.getTypeTaskList { (data) -> Void in
+            self.taskList = data;
+            /*
+            for typeTaskItem in data {
+                var name: String? = typeTaskItem.valueForKey("name") as? String
+                self.taskList.append(name!)
+            }
+            */
+        }
         
     }
     
@@ -73,83 +83,48 @@ class AdministradorViewController: UIViewController,UITextFieldDelegate{
             case 1:
                 alertView.message = "PLEASE FILL OUT NUMBER OF HOURS"
             default:
-                alertView.message = "PLEASE FILL OUT FORM COMPLETELY"
+                alertView.message = "TASK NO ASSIGNED"
         }
         alertView.delegate = self
         alertView.addButtonWithTitle("OK")
         alertView.show()
     }
     
-    @IBAction func insertNewTask(sender: UIBarButtonItem) {
-        let context = self.fetchedResultsController.managedObjectContext
-        let entity = self.fetchedResultsController.fetchRequest.entity!
-        let newManagedObject = NSEntityDescription.insertNewObjectForEntityForName(entity.name!, inManagedObjectContext: context) as! NSManagedObject
-        
-        // 1. Check desc, time, type is not empty
-        let descriptionTask:NSString = self.descriptionTask.text
-        let numberOfHoursOfTask:NSString = self.numberOfHoursOfTask.text!
-        let typeTask:NSString = self.typeTaskSelected
-        
-        if (descriptionTask.isEqualToString("")) {
-            self.showError(0)
-        }else if (numberOfHoursOfTask.isEqualToString("0")) {
-            self.showError(1)
-        }else{
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
-                // 2. Buscar técnico que tenga type en sus skills
-                
-                
-                // 3. De la lista de usuarios con ese type, escogemos al que tenga menos horas ese día
-                
-                newManagedObject.setValue(NSDate(), forKey: "datetask")
-                
-                // Save the context.
-                var error: NSError? = nil
-                if !context.save(&error) {
-                    abort()
-                }
-            })
-        
-        }
+    
+    
+    func showMessage(userName: String){
+        var alertView:UIAlertView = UIAlertView()
+        alertView.title = "assigned to \(userName)"
+        alertView.delegate = self
+        alertView.addButtonWithTitle("OK")
+        alertView.show()
     }
     
-    // MARK: - Fetched results controller
-    
-    var fetchedResultsController: NSFetchedResultsController {
-        if _fetchedResultsController != nil {
-            return _fetchedResultsController!
+    @IBAction func insertNewTask(sender: UIBarButtonItem) {
+        let context = SDOSCoreDataStack.sharedManager.managedObjectContext
+        let entity = "Task"
+        let newManagedObject = NSEntityDescription.insertNewObjectForEntityForName(entity, inManagedObjectContext: context!) as! NSManagedObject
+        
+        // 1. Check desc, time, type is not empty
+        let descriptionTask : String = self.descriptionTask.text as String
+        let numberOfHoursOfTask = self.numberOfHoursOfTask.text!
+        let typeTask : String = self.typeTaskSelected.valueForKey("ident") as! String
+        
+        if (descriptionTask == "") {
+            self.showError(0)
+        }else if (numberOfHoursOfTask == "0") {
+            self.showError(1)
+        }else{
+            let task = Task(description: descriptionTask, duration: numberOfHoursOfTask, typeTaskItem: self.typeTaskSelected)
+            
+            if task.isValid() {
+                showMessage(task.user.name)
+            }else{
+                showError(2)
+            }
+            
+            
         }
-        
-        let fetchRequest = NSFetchRequest()
-        // Edit the entity name as appropriate.
-        let entity = NSEntityDescription.entityForName("Usuario", inManagedObjectContext: self.managedObjectContext!)
-        fetchRequest.entity = entity
-        
-        // Set the batch size to a suitable number.
-        fetchRequest.fetchBatchSize = 20
-        
-        // Edit the sort key as appropriate.
-        let sortDescriptor = NSSortDescriptor(key: "datetask", ascending: false)
-        let sortDescriptors = [sortDescriptor]
-        
-        fetchRequest.sortDescriptors = [sortDescriptor]
-        
-        if let name = self.nameUser {
-            let predicate = NSPredicate(format: "name == %@", self.nameUser!)
-            fetchRequest.predicate = predicate
-        }
-        
-        // Edit the section name key path and cache name if appropriate.
-        // nil for section name key path means "no sections".
-        let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext!, sectionNameKeyPath: nil, cacheName: "SDOSTest")
-        _fetchedResultsController = aFetchedResultsController
-        
-        var error: NSError? = nil
-        if !_fetchedResultsController!.performFetch(&error) {
-            abort()
-        }
-        
-        return _fetchedResultsController!
     }
     
     var _fetchedResultsController: NSFetchedResultsController? = nil
@@ -171,8 +146,9 @@ class AdministradorViewController: UIViewController,UITextFieldDelegate{
     // pragma MARK: UIPickerViewDelegate
     
     func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String! {
+        var res = taskList[row].valueForKey("name") as! String
         self.typeTaskSelected = taskList[row]
-        return taskList[row]
+        return res
     }
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {   //delegate method

@@ -12,7 +12,6 @@ import CoreData
 class TecnicoViewController: UITableViewController, NSFetchedResultsControllerDelegate {
 
     var detailViewController: DetailViewController? = nil
-    var managedObjectContext: NSManagedObjectContext? = nil
     var prefs:NSUserDefaults = NSUserDefaults.standardUserDefaults()
     var nameUser : String! = nil
     
@@ -78,18 +77,20 @@ class TecnicoViewController: UITableViewController, NSFetchedResultsControllerDe
         self.presentViewController(navigationController, animated: true, completion: nil)
     }
     
-    @IBAction func insertNewTask(sender: UIBarButtonItem) {
+    @IBAction func removeTask(sender: UIBarButtonItem) {
         let context = self.fetchedResultsController.managedObjectContext
         let entity = self.fetchedResultsController.fetchRequest.entity!
         let newManagedObject = NSEntityDescription.insertNewObjectForEntityForName(entity.name!, inManagedObjectContext: context) as! NSManagedObject
         
-        newManagedObject.setValue(NSDate(), forKey: "datetask")
-        
-        // Save the context.
-        var error: NSError? = nil
-        if !context.save(&error) {
-            abort()
+        if let indexPath = self.tableView.indexPathForSelectedRow() {
+            let object = self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
+            object.setValue("1", forKey: "finished")
+            var error: NSError? = nil
+            if !context.save(&error) {
+                abort()
+            }
         }
+        
     }
     
 
@@ -142,11 +143,11 @@ class TecnicoViewController: UITableViewController, NSFetchedResultsControllerDe
     }
 
     func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
-            let object = self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
-        let name : String = object.valueForKey("name")!.description
-        let datetask : String = object.valueForKey("datetask")!.description
-        let phone : String = object.valueForKey("phone")!.description
-        cell.textLabel!.text = "\(name) - \(phone)"
+            let object = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Task
+        let name : String = object.typetask.name
+        let datetask : String = object.datetask.description
+        let duration : String = object.duration
+        cell.textLabel!.text = "\(name) - \(duration)"
         cell.detailTextLabel!.text = datetask
     }
 
@@ -156,10 +157,10 @@ class TecnicoViewController: UITableViewController, NSFetchedResultsControllerDe
         if _fetchedResultsController != nil {
             return _fetchedResultsController!
         }
-        
+        let managedContext = SDOSCoreDataStack.sharedManager.managedObjectContext!
         let fetchRequest = NSFetchRequest()
         // Edit the entity name as appropriate.
-        let entity = NSEntityDescription.entityForName("Usuario", inManagedObjectContext: self.managedObjectContext!)
+        let entity = NSEntityDescription.entityForName("Task", inManagedObjectContext: managedContext)
         fetchRequest.entity = entity
         
         // Set the batch size to a suitable number.
@@ -168,17 +169,13 @@ class TecnicoViewController: UITableViewController, NSFetchedResultsControllerDe
         // Edit the sort key as appropriate.
         let sortDescriptor = NSSortDescriptor(key: "datetask", ascending: false)
         let sortDescriptors = [sortDescriptor]
-        
         fetchRequest.sortDescriptors = [sortDescriptor]
-        
-        if let name = self.nameUser {
-            let predicate = NSPredicate(format: "name == %@", self.nameUser!)
-            fetchRequest.predicate = predicate
-        }
+        let predicate = NSPredicate(format: "user.name == %@ AND finished == %@", argumentArray: [self.nameUser, "0"])
+        fetchRequest.predicate = predicate
         
         // Edit the section name key path and cache name if appropriate.
         // nil for section name key path means "no sections".
-        let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext!, sectionNameKeyPath: nil, cacheName: "SDOSTest")
+        let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: managedContext, sectionNameKeyPath: nil, cacheName: "SDOSTest")
         aFetchedResultsController.delegate = self
         _fetchedResultsController = aFetchedResultsController
         
@@ -202,6 +199,7 @@ class TecnicoViewController: UITableViewController, NSFetchedResultsControllerDe
             case .Delete:
                 self.tableView.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
             default:
+                //self.tableView.reloadData()
                 return
         }
     }

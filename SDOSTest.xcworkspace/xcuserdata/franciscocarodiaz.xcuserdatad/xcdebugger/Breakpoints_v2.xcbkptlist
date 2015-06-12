@@ -9,13 +9,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "SDOSTest/TecnicoViewController.swift"
-            timestampString = "455731266.669608"
+            filePath = "SDOSTest/DataManager.swift"
+            timestampString = "455817121.676806"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "87"
-            endingLineNumber = "87"
-            landmarkName = "insertNewTask(_:)"
+            startingLineNumber = "108"
+            endingLineNumber = "108"
+            landmarkName = "getUserWithSkill(_:success:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
