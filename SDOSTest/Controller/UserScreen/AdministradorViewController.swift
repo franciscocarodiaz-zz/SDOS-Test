@@ -29,7 +29,6 @@ class AdministradorViewController: UIViewController,UITextFieldDelegate{
     override func awakeFromNib() {
         super.awakeFromNib()
         if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
-            //self.preferredContentSize = CGSize(width: 320.0, height: 600.0)
         }
     }
     
@@ -45,12 +44,6 @@ class AdministradorViewController: UIViewController,UITextFieldDelegate{
         
         DataManager.getTypeTaskList { (data) -> Void in
             self.taskList = data;
-            /*
-            for typeTaskItem in data {
-                var name: String? = typeTaskItem.valueForKey("name") as? String
-                self.taskList.append(name!)
-            }
-            */
         }
         
     }

@@ -43,15 +43,6 @@ class TecnicoViewController: UITableViewController, NSFetchedResultsControllerDe
         let logOutButton = UIBarButtonItem(barButtonSystemItem: .Reply, target: self, action: "logOut:")
         self.navigationItem.leftBarButtonItem = logOutButton
         
-        /*
-        //1. Edit button by default
-        //self.navigationItem.leftBarButtonItem = self.editButtonItem()
-        
-        //2. Add right button by code
-        let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "insertNewObject:")
-        self.navigationItem.rightBarButtonItem = addButton
-        */
-        
         if let split = self.splitViewController {
             let controllers = split.viewControllers
             self.detailViewController = controllers[controllers.count-1].topViewController as? DetailViewController
@@ -66,8 +57,6 @@ class TecnicoViewController: UITableViewController, NSFetchedResultsControllerDe
     func logOut(sender: AnyObject) {
         let appDomain = NSBundle.mainBundle().bundleIdentifier
         NSUserDefaults.standardUserDefaults().removePersistentDomainForName(appDomain!)
-    
-        //self.dismissViewControllerAnimated(true, completion: nil)
         
         let storyboard = UIStoryboard(name: "Welcome", bundle: nil)
         let vc = storyboard.instantiateViewControllerWithIdentifier("HomeVC") as! HomeVC
@@ -223,15 +212,6 @@ class TecnicoViewController: UITableViewController, NSFetchedResultsControllerDe
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
         self.tableView.endUpdates()
     }
-
-    /*
-     // Implementing the above methods to update the table view in response to individual changes may have performance implications if a large number of changes are made simultaneously. If this proves to be an issue, you can instead just implement controllerDidChangeContent: which notifies the delegate that all section and object changes have been processed.
-     
-     func controllerDidChangeContent(controller: NSFetchedResultsController) {
-         // In the simplest, most efficient, case, reload the table view.
-         self.tableView.reloadData()
-     }
-     */
 
 }
 
