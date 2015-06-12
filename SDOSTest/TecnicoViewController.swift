@@ -1,5 +1,5 @@
 //
-//  MasterViewController.swift
+//  TecnicoViewController.swift
 //  SDOSTest
 //
 //  Created by Francisco Caro Diaz on 10/06/15.
@@ -9,12 +9,23 @@
 import UIKit
 import CoreData
 
-class MasterViewController: UITableViewController, NSFetchedResultsControllerDelegate {
+class TecnicoViewController: UITableViewController, NSFetchedResultsControllerDelegate {
 
     var detailViewController: DetailViewController? = nil
     var managedObjectContext: NSManagedObjectContext? = nil
-
-
+    var prefs:NSUserDefaults = NSUserDefaults.standardUserDefaults()
+    var nameUser : String! = nil
+    
+    var userProfile: String {
+        get {
+            var profile = prefs.objectForKey("USERTYPE") as! String
+            if(profile == "0"){
+                return "Administrador"
+            }
+            return "Técnico"
+        }
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
@@ -25,11 +36,23 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        self.navigationItem.leftBarButtonItem = self.editButtonItem()
-
+        
+        self.nameUser = prefs.objectForKey("NAME") as? String
+        
+        self.title = "\(self.nameUser) - \(userProfile)"
+        
+        let logOutButton = UIBarButtonItem(barButtonSystemItem: .Reply, target: self, action: "logOut:")
+        self.navigationItem.leftBarButtonItem = logOutButton
+        
+        /*
+        //1. Edit button by default
+        //self.navigationItem.leftBarButtonItem = self.editButtonItem()
+        
+        //2. Add right button by code
         let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "insertNewObject:")
         self.navigationItem.rightBarButtonItem = addButton
+        */
+        
         if let split = self.splitViewController {
             let controllers = split.viewControllers
             self.detailViewController = controllers[controllers.count-1].topViewController as? DetailViewController
@@ -40,25 +63,36 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-    func insertNewObject(sender: AnyObject) {
+    
+    func logOut(sender: AnyObject) {
+        let appDomain = NSBundle.mainBundle().bundleIdentifier
+        NSUserDefaults.standardUserDefaults().removePersistentDomainForName(appDomain!)
+    
+        //self.dismissViewControllerAnimated(true, completion: nil)
+        
+        let storyboard = UIStoryboard(name: "Welcome", bundle: nil)
+        let vc = storyboard.instantiateViewControllerWithIdentifier("HomeVC") as! HomeVC
+        vc.managedObjectContext = self.managedObjectContext
+        
+        let navigationController = UINavigationController(rootViewController: vc)
+        
+        self.presentViewController(navigationController, animated: true, completion: nil)
+    }
+    
+    @IBAction func insertNewTask(sender: UIBarButtonItem) {
         let context = self.fetchedResultsController.managedObjectContext
         let entity = self.fetchedResultsController.fetchRequest.entity!
         let newManagedObject = NSEntityDescription.insertNewObjectForEntityForName(entity.name!, inManagedObjectContext: context) as! NSManagedObject
-             
-        // If appropriate, configure the new managed object.
-        // Normally you should use accessor methods, but using KVC here avoids the need to add a custom class to the template.
-        newManagedObject.setValue(NSDate(), forKey: "timeStamp")
-             
+        
+        newManagedObject.setValue(NSDate(), forKey: "datetask")
+        
         // Save the context.
         var error: NSError? = nil
         if !context.save(&error) {
-            // Replace this implementation with code to handle the error appropriately.
-            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-            //println("Unresolved error \(error), \(error.userInfo)")
             abort()
         }
     }
+    
 
     // MARK: - Segues
 
@@ -103,9 +137,6 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
                 
             var error: NSError? = nil
             if !context.save(&error) {
-                // Replace this implementation with code to handle the error appropriately.
-                // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                //println("Unresolved error \(error), \(error.userInfo)")
                 abort()
             }
         }
@@ -113,7 +144,11 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
     func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
             let object = self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
-        cell.textLabel!.text = object.valueForKey("timeStamp")!.description
+        let name : String = object.valueForKey("name")!.description
+        let datetask : String = object.valueForKey("datetask")!.description
+        let phone : String = object.valueForKey("phone")!.description
+        cell.textLabel!.text = "\(name) - \(phone)"
+        cell.detailTextLabel!.text = datetask
     }
 
     // MARK: - Fetched results controller
@@ -125,29 +160,31 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         
         let fetchRequest = NSFetchRequest()
         // Edit the entity name as appropriate.
-        let entity = NSEntityDescription.entityForName("Event", inManagedObjectContext: self.managedObjectContext!)
+        let entity = NSEntityDescription.entityForName("Usuario", inManagedObjectContext: self.managedObjectContext!)
         fetchRequest.entity = entity
         
         // Set the batch size to a suitable number.
         fetchRequest.fetchBatchSize = 20
         
         // Edit the sort key as appropriate.
-        let sortDescriptor = NSSortDescriptor(key: "timeStamp", ascending: false)
+        let sortDescriptor = NSSortDescriptor(key: "datetask", ascending: false)
         let sortDescriptors = [sortDescriptor]
         
         fetchRequest.sortDescriptors = [sortDescriptor]
         
+        if let name = self.nameUser {
+            let predicate = NSPredicate(format: "name == %@", self.nameUser!)
+            fetchRequest.predicate = predicate
+        }
+        
         // Edit the section name key path and cache name if appropriate.
         // nil for section name key path means "no sections".
-        let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext!, sectionNameKeyPath: nil, cacheName: "Master")
+        let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext!, sectionNameKeyPath: nil, cacheName: "SDOSTest")
         aFetchedResultsController.delegate = self
         _fetchedResultsController = aFetchedResultsController
         
     	var error: NSError? = nil
     	if !_fetchedResultsController!.performFetch(&error) {
-    	     // Replace this implementation with code to handle the error appropriately.
-    	     // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-             //println("Unresolved error \(error), \(error.userInfo)")
     	     abort()
     	}
         

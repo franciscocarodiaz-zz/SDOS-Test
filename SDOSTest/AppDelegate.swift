@@ -16,16 +16,77 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        // Override point for customization after application launch.
-        let splitViewController = self.window!.rootViewController as! UISplitViewController
-        let navigationController = splitViewController.viewControllers[splitViewController.viewControllers.count-1] as! UINavigationController
-        navigationController.topViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem()
-        splitViewController.delegate = self
-
-        let masterNavigationController = splitViewController.viewControllers[0] as! UINavigationController
-        let controller = masterNavigationController.topViewController as! MasterViewController
-        controller.managedObjectContext = self.managedObjectContext
+        
+        //self.customizeAppearance();
+        
+        window = UIWindow(frame: UIScreen.mainScreen().bounds)
+        
+        var storyboard = UIStoryboard(name: "Welcome", bundle: nil)
+        
+        var initialViewController = storyboard.instantiateViewControllerWithIdentifier("HomeVC") as! HomeVC
+        initialViewController.managedObjectContext = self.managedObjectContext
+        
+        let navigationController = UINavigationController(rootViewController: initialViewController)
+        
+        self.window?.rootViewController = navigationController
+        self.window?.makeKeyAndVisible()
+        
+        /*
+        
+        
+        let prefs:NSUserDefaults = NSUserDefaults.standardUserDefaults()
+        let isLoggedIn:Int = prefs.integerForKey("ISLOGGEDIN") as Int
+        if (isLoggedIn == 1) {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let vc = storyboard.instantiateViewControllerWithIdentifier("MasterViewController") as! MasterViewController
+            vc.managedObjectContext = self.managedObjectContext
+            self.window?.rootViewController = vc
+            self.window?.makeKeyAndVisible()
+            /*
+            // Override point for customization after application launch.
+            let splitViewController = self.window!.rootViewController as! UISplitViewController
+            let navigationController = splitViewController.viewControllers[splitViewController.viewControllers.count-1] as! UINavigationController
+            navigationController.topViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem()
+            splitViewController.delegate = self
+            
+            let masterNavigationController = splitViewController.viewControllers[0] as! UINavigationController
+            let controller = masterNavigationController.topViewController as! MasterViewController
+            controller.managedObjectContext = self.managedObjectContext
+            */
+        }else{
+            window = UIWindow(frame: UIScreen.mainScreen().bounds)
+            
+            var storyboard = UIStoryboard(name: "Welcome", bundle: nil)
+            
+            var initialViewController = storyboard.instantiateViewControllerWithIdentifier("HomeVC") as! HomeVC
+            initialViewController.managedObjectContext = self.managedObjectContext
+            self.window?.rootViewController = initialViewController
+            self.window?.makeKeyAndVisible()
+        }
+        */
+        
         return true
+    }
+    
+    func customizeAppearance(){
+        UIApplication.sharedApplication().statusBarStyle = UIStatusBarStyle.LightContent;
+        let appearanceViewController = UINavigationBar.appearance();
+        appearanceViewController.barTintColor = UIColor.blueColor();
+        appearanceViewController.tintColor = UIColor.blueColor();
+        appearanceViewController.translucent = true;
+        
+        var shadow = NSShadow()
+        shadow.shadowColor = UIColor.whiteColor()
+        shadow.shadowOffset = CGSizeMake(0, 1)
+        var color : UIColor = UIColor.blackColor()
+        var titleFont : UIFont = UIFont(name: "STHeitiTC-Medium", size: 16.0)!
+
+        var attributes = [
+            NSForegroundColorAttributeName : color,
+            NSShadowAttributeName : shadow,
+            NSFontAttributeName : titleFont
+        ]
+        appearanceViewController.titleTextAttributes = attributes;
     }
 
     func applicationWillResignActive(application: UIApplication) {
